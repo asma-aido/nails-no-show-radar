@@ -89,10 +89,10 @@
 ## Screenshots
 
 ### Dashboard
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](screenshots/Dashboard.png)
 
 ### Impact
-![Impact](screenshots/impact.png)
+![Impact](screenshots/Impact.png)
 
 ---
 ## تشغيل المشروع
