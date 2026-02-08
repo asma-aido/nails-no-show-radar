@@ -4,8 +4,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 import streamlit as st
 
-
-# بيانات اختبر عليها المنتج (صالون أظافر)
+# بيانات اختبر عليها المنتج 
 NAIL_SERVICES = [
     ("Manicure", 45, [70, 90, 110]),
     ("Pedicure", 60, [90, 120, 150]),
@@ -17,7 +16,6 @@ NAIL_SERVICES = [
 
 TECHS = ["Asma", "Hessa", "Aisha", "Razan"]
 
-
 def generate_bookings_data(n: int = 35, seed: int = 7):
     random.seed(seed)
     now = datetime.now()
@@ -26,13 +24,10 @@ def generate_bookings_data(n: int = 35, seed: int = 7):
     for i in range(n):
         hours_until = random.randint(1, 12)
         start_time = now + timedelta(hours=hours_until)
-
         service_name, duration_min, price_choices = random.choice(NAIL_SERVICES)
         price = random.choice(price_choices)
-
         created_hours_before = random.randint(1, 72)
         visits = random.randint(0, 12)
-
         past_no_shows = 0
         # بعض الزباين لهم سجل بسيط لعدم حضور المواعيد
         if random.random() < 0.15:
@@ -63,40 +58,31 @@ def generate_bookings_data(n: int = 35, seed: int = 7):
 
     return out
 
-
 def calculate_risk_score(booking: dict) -> int:
     score = 0
 
     # أعلى علامة خطر: وجود سجل عدم حضور سابق
     if booking["past_no_shows"] >= 1:
         score += 40
-
     # العميل الجديد غالبًا أقل التزام
     if booking["visits_count"] == 0:
         score += 20
-
     # انقطاع طويل عن آخر زيارة
     if booking["last_visit_days_ago"] > 120:
         score += 10
-
     # الحجز المتأخر يعطي انطباع بعدم جدية
     if booking["created_hours_before"] < 3:
         score += 15
-
     # لا نريد ضياع مواعيد الجلسات الطويلة
     if booking["duration_min"] >= 90:
         score += 10
-
     # الذروة حساسة للسعة
     if booking["is_peak_hour"]:
         score += 10
-
     # لا نريد ضياع الجلسات الأعلى سعرًا
     if booking["price"] >= 240:
         score += 15
-
     return score
-
 
 def risk_level(score: int) -> str:
     if score >= 65:
@@ -104,7 +90,6 @@ def risk_level(score: int) -> str:
     if score >= 35:
         return "Medium"
     return "Low"
-
 
 def suggested_action(booking: dict) -> str:
     risk = booking["risk"]
@@ -132,17 +117,13 @@ def suggested_action(booking: dict) -> str:
 
     return "تذكير عادي"
 
-
 def calculate_metrics(bookings: list[dict]) -> dict:
     total = len(bookings)
     high = [b for b in bookings if b["risk"] == "High"]
-
     revenue_at_risk = sum(b["price"] for b in high)
     minutes_at_risk = sum(b["duration_min"] for b in high)
-
     expected_reduction_high = 0.25
     expected_protected = int(revenue_at_risk * expected_reduction_high)
-
     return {
         "total_bookings": total,
         "high_risk_count": len(high),
@@ -293,3 +274,4 @@ with tabs[2]:
         "الخطوة القادمة: إجراء تجربة فعلية (A/B test) لمقارنة طلب العربون مقابل التأكيد الإضافي عبر واتساب، "
         "واستبدال الافتراضات ببيانات حقيقية."
     )
+
